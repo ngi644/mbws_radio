@@ -1,5 +1,5 @@
 {
-    "name": "mbws_radio",
+    "name": "LEDバトン",
     "description": "",
     "dependencies": {
         "core": "*",
