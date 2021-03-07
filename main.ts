@@ -1,3 +1,11 @@
+function ledOn () {
+    pins.digitalWritePin(DigitalPin.P0, 1)
+    basic.pause(500)
+    pins.digitalWritePin(DigitalPin.P1, 1)
+    basic.pause(500)
+    pins.digitalWritePin(DigitalPin.P2, 1)
+    basic.pause(500)
+}
 function ledOff () {
     pins.digitalWritePin(DigitalPin.P0, 0)
     pins.digitalWritePin(DigitalPin.P1, 0)
@@ -19,15 +27,9 @@ input.onButtonPressed(Button.AB, function () {
 radio.onReceivedString(function (receivedString) {
     basic.showString(receivedString)
     if (receivedString == MyWord) {
-        pins.digitalWritePin(DigitalPin.P0, 1)
-        basic.pause(500)
-        pins.digitalWritePin(DigitalPin.P1, 1)
-        basic.pause(500)
-        pins.digitalWritePin(DigitalPin.P2, 1)
-        basic.pause(500)
-        radio.sendString("" + (NextWord))
+        NowState = 1
     } else {
-        ledOff()
+        NowState = 0
     }
 })
 input.onButtonPressed(Button.B, function () {
@@ -36,10 +38,19 @@ input.onButtonPressed(Button.B, function () {
 })
 let NextWord = ""
 let MyWord = ""
+let NowState = 0
 let Words: string[] = []
 ledOff()
 radio.setGroup(1)
 Words = ["A", "B", "AB"]
+NowState = 0
 basic.forever(function () {
     basic.showString("" + (MyWord))
+    if (NowState == 1) {
+        ledOn()
+        NowState = 0
+        radio.sendString("" + (NextWord))
+    } else {
+        ledOff()
+    }
 })
